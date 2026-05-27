@@ -1,0 +1,420 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSHELLVN - GET KEY SYSTEM</title>
+    <!-- Google Fonts & Font Awesome 6 -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg: #09090b;
+            --card: rgba(18, 18, 21, 0.6);
+            --border: rgba(255, 255, 255, 0.08);
+            --primary: #ffffff;
+            --primary-hover: #e4e4e7;
+            --text: #f4f4f5;
+            --text-dim: #71717a;
+            --glow: rgba(255, 255, 255, 0.015);
+            --maintenance: #f43f5e;
+            --success: #10b981;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Cybernetic Glowing Blurs */
+        .blur-sphere {
+            position: absolute;
+            width: 350px;
+            height: 350px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.02);
+            filter: blur(120px);
+            z-index: -1;
+        }
+        .sphere-1 { top: 10%; left: 10%; }
+        .sphere-2 { bottom: 10%; right: 10%; }
+
+        .container {
+            width: 100%;
+            max-width: 440px;
+            padding: 20px;
+            box-sizing: border-box;
+            animation: containerEntrance 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes containerEntrance {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Premium Obsidian Glass Card */
+        .card {
+            background: var(--card);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            padding: 45px 35px;
+            border-radius: 28px;
+            text-align: center;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Border top glow */
+        .card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+        }
+
+        /* Home navigation button */
+        .btn-home {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            color: var(--text-dim);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            font-size: 13px;
+        }
+        .btn-home:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255,255,255,0.15);
+        }
+
+        /* Brand styling */
+        h1 {
+            font-weight: 800;
+            font-size: 26px;
+            margin: 15px 0 6px 0;
+            letter-spacing: -0.04em;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-shadow: 0 0 20px rgba(255,255,255,0.1);
+        }
+
+        p.subtitle {
+            color: var(--text-dim);
+            font-size: 13px;
+            margin-bottom: 30px;
+            font-weight: 500;
+            line-height: 1.5;
+        }
+
+        /* Premium Zinc Metallic Action Button */
+        .btn {
+            width: 100%;
+            background: var(--primary);
+            color: #09090b;
+            border: none;
+            padding: 16px;
+            border-radius: 14px;
+            font-weight: 800;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            letter-spacing: 0.05em;
+            box-shadow: 0 4px 12px rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1.5px);
+            box-shadow: 0 6px 18px rgba(255,255,255,0.15);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            background: #1c1c1f;
+            color: #52525b;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+            border: 1px solid rgba(255,255,255,0.02);
+        }
+
+        /* Result container with smooth roll-down */
+        #result {
+            margin-top: 25px;
+            display: none;
+            animation: rollDown 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes rollDown {
+            from { opacity: 0; transform: translateY(-10px); max-height: 0; }
+            to { opacity: 1; transform: translateY(0); max-height: 200px; }
+        }
+
+        .link-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px dashed var(--border);
+            padding: 20px;
+            border-radius: 14px;
+            word-break: break-all;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+        .link-card:hover {
+            border-color: rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.03);
+        }
+
+        .btn-link-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--success);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            transition: all 0.2s;
+            border: 1px solid rgba(16, 185, 129, 0.15);
+            background: rgba(16, 185, 129, 0.05);
+            padding: 8px 16px;
+            border-radius: 8px;
+        }
+        .btn-link-action:hover {
+            background: rgba(16, 185, 129, 0.1);
+            transform: scale(1.02);
+        }
+
+        .error-msg {
+            color: var(--maintenance);
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        /* Maintenance Panel */
+        .maintenance-panel {
+            display: none;
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        .maintenance-icon {
+            font-size: 40px;
+            color: var(--maintenance);
+            margin-bottom: 20px;
+            animation: pulseGear 3s infinite linear;
+        }
+
+        @keyframes pulseGear {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .btn-maintenance {
+            background: rgba(244, 63, 94, 0.1);
+            border: 1px solid rgba(244, 63, 94, 0.2);
+            color: var(--maintenance);
+            font-weight: 700;
+        }
+        .btn-maintenance:hover {
+            background: rgba(244, 63, 94, 0.15);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Pulse loading effect */
+        .pulse-text {
+            animation: pulseGlow 1.5s infinite ease-in-out;
+        }
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Cyber Background Spheres -->
+    <div class="blur-sphere sphere-1"></div>
+    <div class="blur-sphere sphere-2"></div>
+
+    <div class="container">
+        <div class="card">
+            <!-- Home navigation -->
+            <a href="/" class="btn-home" title="Quay về Trang chủ">
+                <i class="fa-solid fa-house"></i>
+            </a>
+
+            <!-- ACTIVE SYSTEM VIEW -->
+            <div id="active-system-view">
+                <h1>
+                    <i class="fa-solid fa-key" style="color: #ffffff; font-size: 20px;"></i>
+                    <span id="brand-title">CSHELLVN</span>
+                </h1>
+                <p id="desc" class="subtitle">Hệ thống Get Key tự động 24h</p>
+
+                <button id="get-btn" class="btn" onclick="generateLink()">
+                    <i class="fa-solid fa-link"></i>
+                    <span id="btn-text">GET KEY NGAY</span>
+                </button>
+
+                <div id="result">
+                    <p style="color: #ffffff; margin-bottom: 12px; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em;">Link của bạn đã sẵn sàng:</p>
+                    <div class="link-card">
+                        <a id="short-link" href="#" target="_blank" class="btn-link-action">
+                            <i class="fa-solid fa-circle-arrow-right"></i> BẤM VÀO ĐÂY ĐỂ VƯỢT LINK
+                        </a>
+                    </div>
+                    <p style="font-size: 11px; color: var(--text-dim); margin-bottom: 0;">Vượt mã liên kết xong bạn sẽ nhận được Key.</p>
+                    <div class="error-msg" id="error-msg" style="display: none;"></div>
+                </div>
+            </div>
+
+            <!-- MAINTENANCE VIEW -->
+            <div id="maintenance-view" class="maintenance-panel">
+                <div class="maintenance-icon">
+                    <i class="fa-solid fa-screwdriver-wrench"></i>
+                </div>
+                <h1 style="color: var(--maintenance); font-size: 22px;">HỆ THỐNG BẢO TRÌ</h1>
+                <p class="subtitle" style="margin-bottom: 25px;">Tính năng Get Key miễn phí hiện đang được bảo trì định kỳ để nâng cấp máy chủ. Quý khách vui lòng quay lại sau ít phút hoặc liên hệ Admin để mua key trực tiếp!</p>
+                
+                <button class="btn btn-maintenance" disabled>
+                    <i class="fa-solid fa-triangle-exclamation"></i> ĐANG BẢO TRÌ HỆ THỐNG
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const appIdFromUrl = urlParams.get('appId');
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const response = await fetch('/api/client/payment-settings');
+                const data = await response.json();
+                
+                if (data.success && data.settings) {
+                    // Check global website maintenance
+                    if (data.settings.websiteMaintenance) {
+                        // Redirect or show full website maintenance block
+                        document.body.innerHTML = `
+                            <div class="blur-sphere sphere-1"></div>
+                            <div class="blur-sphere sphere-2"></div>
+                            <div class="container" style="max-width: 460px;">
+                                <div class="card" style="padding: 50px 40px;">
+                                    <div style="font-size: 50px; color: #f43f5e; margin-bottom: 25px; animation: pulseGlow 2s infinite;"><i class="fa-solid fa-gears"></i></div>
+                                    <h1 style="color: #ffffff; font-size: 24px; font-weight: 800; margin-bottom: 12px; letter-spacing: -0.03em;">WEBSITE ĐANG BẢO TRÌ</h1>
+                                    <p style="color: #71717a; font-size: 13px; line-height: 1.6; margin-bottom: 30px;">Hệ thống đang được nâng cấp định kỳ để nâng cao hiệu năng giao dịch tự động. Chúng tôi sẽ hoạt động trở lại ngay lập tức.</p>
+                                    <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 16px; border-radius: 12px; font-size: 12px; color: #ffffff; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                        <i class="fa-solid fa-headset" style="color: #f43f5e;"></i> KHÁCH HÀNG CẦN HỖ TRỢ XIN LIÊN HỆ ADMIN
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    // Check specific Get Key maintenance status
+                    if (data.settings.getKeyMaintenance) {
+                        document.getElementById('active-system-view').style.display = 'none';
+                        document.getElementById('maintenance-view').style.display = 'block';
+                    }
+
+                    const brandName = data.settings.getKeyBrandName || data.settings.brandName || 'CSHELLVN';
+                    const brandSubtitle = data.settings.getKeyBrandSubtitle || data.settings.brandSubtitle || 'Hệ thống Get Key tự động 24h';
+
+                    document.title = `${brandName} - GET KEY SYSTEM`;
+                    const brandTitleEl = document.getElementById('brand-title');
+                    if (brandTitleEl) brandTitleEl.innerText = brandName;
+
+                    const desc = document.getElementById('desc');
+                    if (desc) desc.innerText = brandSubtitle;
+                }
+            } catch (err) {
+                console.error('Không thể tải cấu hình thương hiệu:', err);
+            }
+        });
+
+        async function generateLink() {
+            const btn = document.getElementById('get-btn');
+            const btnText = document.getElementById('btn-text');
+            const result = document.getElementById('result');
+            const shortLink = document.getElementById('short-link');
+            const errorMsg = document.getElementById('error-msg');
+
+            btn.disabled = true;
+            btnText.innerText = "ĐANG KHỞI TẠO LIÊN KẾT...";
+            btnText.classList.add("pulse-text");
+            errorMsg.style.display = 'none';
+
+            try {
+                const url = appIdFromUrl ? `/api/client/get-key-link?appId=${appIdFromUrl}` : `/api/client/get-key-link`;
+                
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (data.success) {
+                    shortLink.href = data.link;
+                    result.style.display = "block";
+                    btnText.innerText = "TẠO LINK THÀNH CÔNG";
+                    btnText.classList.remove("pulse-text");
+                    btn.style.background = "rgba(16, 185, 129, 0.1)";
+                    btn.style.color = "#10b981";
+                    btn.style.border = "1px solid rgba(16, 185, 129, 0.2)";
+                } else {
+                    errorMsg.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> ${data.message || "Lỗi server!"}`;
+                    errorMsg.style.display = 'flex';
+                    btnText.innerText = "THỬ LẠI";
+                    btnText.classList.remove("pulse-text");
+                    btn.disabled = false;
+                }
+            } catch (err) {
+                errorMsg.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> Lỗi kết nối server!`;
+                errorMsg.style.display = 'flex';
+                btnText.innerText = "THỬ LẠI";
+                btnText.classList.remove("pulse-text");
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>

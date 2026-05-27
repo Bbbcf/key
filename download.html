@@ -1,0 +1,2076 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSHELLVN - TẢI PHẦN MỀM & CÔNG CỤ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg: #09090b;
+            --card: #121215;
+            --border: rgba(255, 255, 255, 0.08);
+            --primary: #fafafa;
+            --primary-hover: #e4e4e7;
+            --text: #f4f4f5;
+            --text-dim: #71717a;
+            --success: #10b981;
+            --blue: #3b82f6;
+            --yellow: #f59e0b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Ambient Glow background */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            height: 600px;
+            background: rgba(255, 255, 255, 0.02);
+            filter: blur(150px);
+            border-radius: 50%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Top Navbar */
+        .navbar {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+            z-index: 50;
+            backdrop-blur: 10px;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-logo-box {
+            width: 40px;
+            height: 40px;
+            background: #18181b;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-logo-box span {
+            font-weight: 800;
+            font-size: 16px;
+            color: #ffffff;
+        }
+
+        .nav-logo-text {
+            font-weight: 800;
+            font-size: 18px;
+            letter-spacing: -0.02em;
+            color: #ffffff;
+        }
+
+        .nav-auth {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-nav {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            color: #ffffff;
+            padding: 10px 18px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+        }
+
+        .btn-nav:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .btn-nav-primary {
+            background: var(--primary);
+            color: #09090b;
+            border: none;
+        }
+
+        .btn-nav-primary:hover {
+            background: var(--primary-hover);
+        }
+
+        .user-menu {
+            display: none;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .user-info {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-dim);
+        }
+
+        .user-info span {
+            color: #ffffff;
+            font-weight: 700;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            z-index: 10;
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeInDown 0.6s ease;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            color: #ffffff;
+            margin-bottom: 8px;
+        }
+
+        header p {
+            font-size: 14px;
+            color: var(--text-dim);
+            font-weight: 500;
+        }
+
+        /* Filter Controls */
+        .filter-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 35px;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        @media (min-width: 768px) {
+            .filter-controls {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+
+        .category-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tab-btn {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            color: var(--text-dim);
+            padding: 10px 18px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn:hover {
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: #09090b;
+            border-color: var(--primary);
+        }
+
+        .search-box {
+            position: relative;
+            max-width: 320px;
+            width: 100%;
+        }
+
+        .search-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px 16px 12px 42px;
+            color: #ffffff;
+            font-size: 13px;
+            font-weight: 500;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: #ffffff;
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-dim);
+            font-size: 14px;
+        }
+
+        /* Download Grid */
+        .download-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 50px;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        @media (min-width: 992px) {
+            .download-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .download-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            height: 100%;
+        }
+
+        .download-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 255, 255, 0.16);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .card-header-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .status-badge {
+            font-size: 9px;
+            font-weight: 800;
+            padding: 4px 8px;
+            border-radius: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .status-active {
+            background: rgba(16, 185, 129, 0.08);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.15);
+        }
+
+        .status-maintaining {
+            background: rgba(245, 158, 11, 0.08);
+            color: var(--yellow);
+            border: 1px solid rgba(245, 158, 11, 0.15);
+        }
+
+        .pulse-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: currentColor;
+            display: inline-block;
+            animation: pulse-active 1.5s infinite;
+        }
+
+        @keyframes pulse-active {
+            0% { opacity: 0.4; }
+            50% { opacity: 1; }
+            100% { opacity: 0.4; }
+        }
+
+        .category-tag {
+            font-size: 9px;
+            font-weight: 800;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 4px 8px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+        }
+
+        .tool-name {
+            font-size: 16px;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 10px;
+            letter-spacing: -0.01em;
+        }
+
+        .tool-desc {
+            font-size: 12px;
+            color: var(--text-dim);
+            line-height: 1.5;
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+
+        .tool-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 11px;
+            color: var(--text-dim);
+            margin-bottom: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            padding-top: 15px;
+        }
+
+        .tool-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .tool-meta i {
+            font-size: 12px;
+        }
+
+        .btn-download-tool {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            color: #ffffff;
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .download-card:hover .btn-download-tool {
+            background: #ffffff;
+            color: #09090b;
+            border-color: #ffffff;
+            transform: translateY(-1px);
+        }
+
+        /* YouTube Guide Section */
+        .guide-section {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 30px;
+            margin-bottom: 40px;
+            animation: fadeInUp 0.7s ease;
+        }
+
+        .guide-title {
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+
+        .guide-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            align-items: center;
+        }
+
+        @media (min-width: 768px) {
+            .guide-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16/9;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: #000000;
+        }
+
+        .video-iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .guide-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .guide-h {
+            font-size: 20px;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -0.02em;
+        }
+
+        .guide-desc {
+            font-size: 13px;
+            color: var(--text-dim);
+            line-height: 1.6;
+        }
+
+        .guide-steps {
+            list-style: none;
+            font-size: 12px;
+            color: var(--text-dim);
+            margin-top: 10px;
+        }
+
+        .guide-steps li {
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .guide-steps li i {
+            color: var(--success);
+        }
+
+        /* Customer Auth Modal styling */
+        .auth-modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(9, 9, 11, 0.85);
+            backdrop-filter: blur(12px);
+            justify-content: center;
+            align-items: center;
+            z-index: 99999 !important;
+            animation: fadeIn 0.2s ease;
+            padding: 20px;
+        }
+
+        .auth-modal-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 35px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.6);
+            position: relative;
+            animation: scaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .auth-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 24px;
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-dim);
+            cursor: pointer;
+            transition: all 0.2s;
+            border-bottom: 2px solid transparent;
+        }
+
+        .auth-tab.active {
+            color: #ffffff;
+            border-bottom-color: #ffffff;
+        }
+
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        .auth-error {
+            color: #f87171;
+            font-size: 12px;
+            font-weight: 600;
+            background: rgba(248, 113, 113, 0.08);
+            border: 1px solid rgba(248, 113, 113, 0.15);
+            padding: 10px 14px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            text-align: center;
+            display: none;
+        }
+
+        /* Order History Panel (Drawer Slide-over) */
+        .history-drawer {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 100%;
+            max-width: 580px;
+            height: 100vh;
+            background: var(--card);
+            border-left: 1px solid var(--border);
+            box-shadow: -20px 0 50px rgba(0,0,0,0.7);
+            z-index: 99999 !important;
+            transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .history-drawer.active {
+            right: 0;
+        }
+
+        .history-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .history-title {
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: #ffffff;
+        }
+
+        .history-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+        }
+
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .history-item {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            transition: all 0.2s;
+        }
+
+        .history-item:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .item-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .item-id {
+            font-size: 13px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .item-status {
+            font-size: 10px;
+            font-weight: 800;
+            padding: 4px 8px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .status-pending {
+            background: rgba(245, 158, 11, 0.1);
+            color: #f59e0b;
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+
+        .status-completed {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .item-details {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--text-dim);
+        }
+
+        .item-key-container {
+            background: #09090b;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 10px 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .item-key {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            font-weight: 700;
+            color: #ffffff;
+            word-break: break-all;
+        }
+
+        .drawer-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(9, 9, 11, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 99998 !important;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .drawer-overlay.active {
+            display: block;
+        }
+
+        .input-dark {
+            width: 100%;
+            background: #09090b;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px 16px;
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.25s;
+        }
+
+        .input-dark:focus {
+            border-color: #ffffff;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.05);
+        }
+
+        .btn-buy {
+            width: 100%;
+            background: var(--primary);
+            color: #09090b;
+            border: none;
+            padding: 16px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.25s;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-buy:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 8px;
+        }
+
+        /* Support chat styling */
+        .chat-widget {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        
+            pointer-events: none; /* Let clicks pass through to page content */}
+
+        .chat-bubble {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+        
+            pointer-events: auto; /* Enable touch on bubble */}
+
+        .chat-bubble:hover {
+            transform: scale(1.08) translateY(-2px);
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+        }
+
+        .chat-bubble .unread-badge {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            background: #ef4444;
+            color: #ffffff;
+            font-size: 10px;
+            font-weight: 800;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--bg);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+
+        .chat-panel {
+            width: 380px;
+            height: 480px;
+            background: rgba(18, 18, 21, 0.95);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transform: translateY(30px) scale(0.95);
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            margin-bottom: 15px;
+        }
+
+        .chat-panel.active {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .chat-header {
+            padding: 16px 20px;
+            background: rgba(255, 255, 255, 0.02);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-header-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chat-header-status {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10b981;
+            box-shadow: 0 0 10px #10b981;
+        }
+
+        .chat-header-text h4 {
+            font-size: 13px;
+            font-weight: 700;
+            color: #ffffff;
+            margin: 0;
+        }
+
+        .chat-header-text p {
+            font-size: 10px;
+            color: var(--text-dim);
+            margin: 1px 0 0 0;
+        }
+
+        .chat-body {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            background: rgba(9, 9, 11, 0.4);
+            scroll-behavior: smooth;
+        }
+
+        .chat-msg {
+            max-width: 80%;
+            padding: 10px 14px;
+            border-radius: 16px;
+            font-size: 13px;
+            line-height: 1.4;
+            word-break: break-word;
+        }
+
+        .chat-msg.customer {
+            align-self: flex-end;
+            background: #ffffff;
+            color: #09090b;
+            font-weight: 500;
+            border-bottom-right-radius: 4px;
+        }
+
+        .chat-msg.admin {
+            align-self: flex-start;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border);
+            color: #ffffff;
+            border-bottom-left-radius: 4px;
+        }
+
+        .chat-msg-time {
+            font-size: 9px;
+            color: var(--text-dim);
+            margin-top: 4px;
+            display: block;
+            text-align: right;
+        }
+
+        .chat-msg.admin .chat-msg-time {
+            text-align: left;
+        }
+
+        .chat-input-area {
+            padding: 12px 16px;
+            border-top: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.02);
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .chat-input {
+            flex: 1;
+            background: #09090b;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 10px 14px;
+            color: #ffffff;
+            font-size: 13px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .chat-input:focus {
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .chat-send-btn {
+            background: var(--primary);
+            color: #09090b;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .chat-send-btn:hover {
+            background: var(--primary-hover);
+        }
+
+        .chat-auth-prompt {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            text-align: center;
+            gap: 12px;
+        }
+
+        .chat-auth-prompt p {
+            font-size: 12px;
+            color: var(--text-dim);
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes scaleUp {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @media (max-width: 480px) {
+            .chat-panel {
+                width: calc(100vw - 40px);
+                height: 420px;
+                right: 20px;
+            }
+            .chat-widget {
+                bottom: 20px;
+                right: 20px;
+            }
+        }
+
+        /* Unified Sidebar & Main Content Layout (jr4x.site inspired) */
+        .app-layout {
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
+            position: relative;
+        
+            overflow-x: hidden; /* Prevent horizontal scroll wiggling */}
+
+        .sidebar {
+            width: 260px;
+            background: #0b0b0d;
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+            z-index: 99999 !important;
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .sidebar-logo {
+            padding: 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            font-weight: 800;
+            font-size: 18px;
+            letter-spacing: -0.02em;
+            color: #ffffff;
+            gap: 12px;
+        }
+
+        .sidebar-menu {
+            flex: 1;
+            padding: 24px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            overflow-y: auto;
+        }
+
+        .sidebar-title {
+            font-size: 9px;
+            font-weight: 800;
+            color: #82868f;
+            opacity: 0.5;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            padding: 12px 16px 6px 16px;
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            color: #82868f;
+            font-size: 13.5px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.25s ease;
+            border: 1px solid transparent;
+        }
+
+        .sidebar-item:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .sidebar-item.active {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.03);
+            border-color: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .sidebar-item i {
+            font-size: 14px;
+            width: 18px;
+            text-align: center;
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: 260px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            width: calc(100% - 260px);
+            position: relative;
+        
+            overflow-x: hidden; /* Prevent horizontal scroll wiggling */}
+
+        @media (max-width: 1024px) {
+            /* Rock-solid viewport scaling and click restoration */
+            .app-layout {
+                width: 100% !important;
+                max-width: 100% !important;
+                overflow-x: hidden !important;
+            }
+            .main-content {
+                margin-left: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                overflow-x: hidden !important;
+            }
+            .container {
+                width: 100% !important;
+                max-width: 100% !important;
+                padding: 15px 12px !important;
+                box-sizing: border-box !important;
+            }
+            .form-panel, .faq-section, .testimonials-section, .product-gallery, .checkout-panel {
+                width: 100% !important;
+                max-width: 100% !important;
+                box-sizing: border-box !important;
+            }
+            .price-card {
+                width: 100% !important;
+                box-sizing: border-box !important;
+            }
+            
+            /* Compact Nav Bar for Mobile */
+            .btn-nav {
+                padding: 8px 12px !important;
+                font-size: 11px !important;
+            }
+            .navbar {
+                padding: 10px 15px !important;
+            }
+            #sidebar-toggle {
+                display: inline-flex !important;
+                align-items: center;
+                justify-content: center;
+            }
+            .sidebar {
+                transform: translateX(-100%);
+                visibility: hidden;
+                pointer-events: none;
+            }
+            .sidebar.active {
+                transform: translateX(0);
+                visibility: visible;
+                pointer-events: auto;
+            }
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+            #sidebar-toggle {
+                display: flex !important;
+            }
+            #nav-logo-mobile {
+                display: flex !important;
+            }
+            .navbar {
+                padding: 15px 20px !important;
+            }
+        }
+    
+        @media (max-width: 480px) {
+            .item-key-container {
+                flex-direction: column !important;
+                align-items: stretch !important;
+                gap: 8px !important;
+                padding: 14px !important;
+            }
+            .item-key {
+                text-align: center !important;
+                margin-bottom: 4px;
+                display: block !important;
+            }
+            .item-key-container button, .item-key-container .btn-copy-small {
+                width: 100% !important;
+                margin-left: 0 !important;
+                margin-top: 4px !important;
+                padding: 8px 12px !important;
+                font-size: 11px !important;
+                display: flex !important;
+                justify-content: center !important;
+                align-items: center !important;
+            }
+            .history-drawer {
+                max-width: 100% !important;
+                width: 100% !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar-menu">
+            <div class="sidebar-logo">
+                <div class="nav-logo-box" style="width: 36px; height: 36px; border-radius: 8px;">
+                    <span id="sidebar-logo-char">C</span>
+                </div>
+                <span style="font-weight: 800; font-size: 18px;" id="sidebar-brand-name">CSHELLVN</span>
+            </div>
+            
+            <div class="sidebar-menu">
+                <p class="sidebar-title">Menu Chính</p>
+                <a href="index.html" class="sidebar-item">
+                    <i class="fa-solid fa-house"></i>
+                    <span>Trang chủ</span>
+                </a>
+                <a href="getkey.html" class="sidebar-item">
+                    <i class="fa-solid fa-key"></i>
+                    <span>Get Key</span>
+                </a>
+                <a href="#" onclick="openHistoryDrawer(); return false;" class="sidebar-item">
+                    <i class="fa-solid fa-history"></i>
+                    <span>Lịch sử đơn</span>
+                </a>
+                
+                <p class="sidebar-title">Dịch Vụ</p>
+                <a href="download.html" class="sidebar-item active">
+                    <i class="fa-solid fa-download"></i>
+                    <span>Tải xuống</span>
+                    <span style="margin-left: auto; padding: 2px 6px; font-size: 8px; background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16,185,129,0.25); border-radius: 4px; font-weight: 800;">FREE</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <!-- Top Navigation Bar -->
+            <nav class="navbar" style="max-width: 100%; width: 100%; border-bottom: 1px solid var(--border); padding: 15px 30px; margin-bottom: 20px; box-sizing: border-box;">
+                <!-- Hamburger menu for mobile -->
+                <button class="btn-nav" id="sidebar-toggle" onclick="toggleMobileSidebar()" style="display: none; padding: 8px 12px; font-size: 16px;">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                
+                <div class="nav-logo" style="display: none;" id="nav-logo-mobile">
+                    <span class="nav-logo-text" id="brand-name-logo-mobile">CSHELLVN</span>
+                </div>
+                
+                <div class="nav-auth" style="margin-left: auto;">
+                    <a href="getkey.html" class="btn-nav" style="color: #60a5fa; border-color: rgba(96, 165, 250, 0.25); background: rgba(96, 165, 250, 0.03);"><i class="fa-solid fa-key"></i> GET KEY NGAY</a>
+                    <!-- Guest state -->
+                    <div id="guest-menu" style="display: flex; gap: 10px;">
+                        <button class="btn-nav" onclick="openAuthModal('login')">
+                            <i class="fa-solid fa-right-to-bracket"></i> ĐĂNG NHẬP
+                        </button>
+                        <button class="btn-nav btn-nav-primary" onclick="openAuthModal('register')">
+                            <i class="fa-solid fa-user-plus"></i> ĐĂNG KÝ
+                        </button>
+                    </div>
+                    <!-- Logged-in state -->
+                    <div id="user-menu" class="user-menu">
+                        <div class="user-info">
+                            Khách: <span id="username-display">-</span>
+                        </div>
+                        <button class="btn-nav" onclick="openHistoryDrawer()">
+                            <i class="fa-solid fa-history"></i> LỊCH SỬ MUA
+                        </button>
+                        <button class="btn-nav" onclick="handleLogout()" style="color: #f87171;">
+                            <i class="fa-solid fa-right-from-bracket"></i> ĐĂNG XUẤT
+                        </button>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="container">
+        <!-- Header -->
+        <header>
+            <h1>TẢI PHẦN MỀM & CÔNG CỤ</h1>
+            <p>Tải xuống các phần mềm, game, giả lập và công cụ hỗ trợ chơi game tốt nhất được cung cấp bởi CSHELLVN.</p>
+        </header>
+
+        <!-- Filter controls -->
+        <div class="filter-controls">
+            <div class="category-tabs">
+                <button class="tab-btn active" onclick="filterCategory('all', this)">Tất Cả</button>
+                <button class="tab-btn" onclick="filterCategory('panel', this)">Bypass / Panel</button>
+                <button class="tab-btn" onclick="filterCategory('emulator', this)">Game / Giả Lập</button>
+                <button class="tab-btn" onclick="filterCategory('tool', this)">Công Cụ / Sửa Lỗi</button>
+            </div>
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="text" id="searchInput" class="search-input" placeholder="Tìm kiếm phần mềm..." oninput="handleSearch()">
+            </div>
+        </div>
+
+        <!-- Download Cards Grid -->
+        <div class="download-grid" id="downloadGrid">
+            <!-- 1. Panel Free Fire PC -->
+            <div class="download-card" data-category="panel" data-name="panel free fire pc aimbot esp">
+                <div class="card-header-info">
+                    <span class="status-badge status-active"><span class="pulse-dot"></span>Hoạt động</span>
+                    <span class="category-tag">PANEL PC</span>
+                </div>
+                <h3 class="tool-name">Panel Free Fire PC</h3>
+                <p class="tool-desc">Panel hỗ trợ chơi game với các chức năng aimbot và esp giúp bạn dễ dàng chơi game không gặp trở ngại.</p>
+                <div class="tool-meta">
+                    <span><i class="fa-solid fa-hard-drive"></i> 32 MB</span>
+                    <span><i class="fa-solid fa-clock"></i> 25/05/2026</span>
+                </div>
+                <a href="https://github.com/dhieucrypto/DhieuCshell/releases/download/DhieuCshell/CSHELL_Setup.exe" class="btn-download-tool" target="_blank"><i class="fa-solid fa-download"></i> TẢI XUỐNG</a>
+            </div>
+
+            <!-- 2. Bypass emulator -->
+            <div class="download-card" data-category="panel" data-name="bypass emulator pc bluestacks meme">
+                <div class="card-header-info">
+                    <span class="status-badge status-active"><span class="pulse-dot"></span>Hoạt động</span>
+                    <span class="category-tag">BYPASS PC</span>
+                </div>
+                <h3 class="tool-name">Bypass Emulator (Meme)</h3>
+                <p class="tool-desc">Bypass giả lập chuyên nghiệp giúp lách phát hiện giả lập khi chơi game cùng mobile, bảo vệ an toàn.</p>
+                <div class="tool-meta">
+                    <span><i class="fa-solid fa-hard-drive"></i> 27.8 MB</span>
+                    <span><i class="fa-solid fa-clock"></i> 25/05/2026</span>
+                </div>
+                <a href="https://github.com/dhieucrypto/DhieuCshell/releases/download/DhieuCshell/MemeBypassEmulatorCS_1.3.0.rar" class="btn-download-tool" target="_blank"><i class="fa-solid fa-download"></i> TẢI XUỐNG</a>
+            </div>
+
+            <!-- 3. Panel Free Fire Max PC -->
+            <div class="download-card" data-category="panel" data-name="panel free fire max pc loadermax">
+                <div class="card-header-info">
+                    <span class="status-badge status-active"><span class="pulse-dot"></span>Hoạt động</span>
+                    <span class="category-tag">PANEL PC</span>
+                </div>
+                <h3 class="tool-name">Panel Free Fire Max PC</h3>
+                <p class="tool-desc">Phiên bản Panel Free Fire Max PC lắc lắc hoạt động cực tốt, tối ưu hóa FPS, mượt mà và an toàn.</p>
+                <div class="tool-meta">
+                    <span><i class="fa-solid fa-hard-drive"></i> 18 MB</span>
+                    <span><i class="fa-solid fa-clock"></i> 25/05/2026</span>
+                </div>
+                <a href="https://github.com/dhieucrypto/DhieuCshell/releases/download/DhieuCshell/Loadermax.exe" class="btn-download-tool" target="_blank"><i class="fa-solid fa-download"></i> TẢI XUỐNG</a>
+            </div>
+
+            <!-- 4. Free Fire V7A -->
+            <div class="download-card" data-category="emulator" data-name="free fire v7a apk xapk pc emulator">
+                <div class="card-header-info">
+                    <span class="status-badge status-active"><span class="pulse-dot"></span>Hoạt động</span>
+                    <span class="category-tag">GAME APK</span>
+                </div>
+                <h3 class="tool-name">Free Fire V7A (Bắt buộc)</h3>
+                <p class="tool-desc">Tệp tin Free Fire V7A tối ưu bắt buộc để sử dụng panel không bị văng game hay lỗi kết nối.</p>
+                <div class="tool-meta">
+                    <span><i class="fa-solid fa-hard-drive"></i> 379 MB</span>
+                    <span><i class="fa-solid fa-clock"></i> 25/05/2026</span>
+                </div>
+                <a href="https://github.com/dhieucrypto/DhieuCshell/releases/download/DhieuCshell/Free.Fire.V7A.xapk" class="btn-download-tool" target="_blank"><i class="fa-solid fa-download"></i> TẢI XUỐNG</a>
+            </div>
+
+            <!-- 5. Free Fire Max x86 Apk -->
+            <div class="download-card" data-category="emulator" data-name="free fire max x86 apk emulator pc bluestacks">
+                <div class="card-header-info">
+                    <span class="status-badge status-active"><span class="pulse-dot"></span>Hoạt động</span>
+                    <span class="category-tag">GAME APK</span>
+                </div>
+                <h3 class="tool-name">Free Fire Max x86 Apk</h3>
+                <p class="tool-desc">Tệp game Free Fire Max x86 tối ưu hóa dành riêng cho giả lập BlueStacks, giảm thiểu lag giật.</p>
+                <div class="tool-meta">
+                    <span><i class="fa-solid fa-hard-drive"></i> 466 MB</span>
+                    <span><i class="fa-solid fa-clock"></i> 25/05/2026</span>
+                </div>
+                <a href="https://github.com/dhieucrypto/DhieuCshell/releases/download/DhieuCshell/Free.Fire_.Max_x86.xapk" class="btn-download-tool" target="_blank"><i class="fa-solid fa-download"></i> TẢI XUỐNG</a>
+            </div>
+
+            <!-- 6. Link giả lập BlueStacks -->
+            <div class="download-card" data-category="emulator" data-name="giả lập bluestacks native pc emulator">
+                <div class="card-header-info">
+                    <span class="status-badge status-active"><span class="pulse-dot"></span>Hoạt động</span>
+                    <span class="category-tag">GIẢ LẬP</span>
+                </div>
+                <h3 class="tool-name">Trình giả lập BlueStacks</h3>
+                <p class="tool-desc">Trình giả lập phiên bản tối ưu hóa cao cho các máy tính tầm trung, giúp chạy mượt Free Fire và Panel.</p>
+                <div class="tool-meta">
+                    <span><i class="fa-solid fa-hard-drive"></i> 1.2 MB</span>
+                    <span><i class="fa-solid fa-clock"></i> 25/05/2026</span>
+                </div>
+                <a href="https://github.com/dhieucrypto/DhieuCshell/releases/download/DhieuCshell/BlueStacksInstaller_5.22.125.1001_native_687d82df2843cc46a094022c77036220_MzsxNQ.exe" class="btn-download-tool" target="_blank"><i class="fa-solid fa-download"></i> TẢI XUỐNG</a>
+            </div>
+
+            <!-- 7. Fix Panel bắt buộc -->
+            <div class="download-card" data-category="tool" data-name="fix panel c++ libraries bắt buộc setup">
+                <div class="card-header-info">
+                    <span class="status-badge status-active"><span class="pulse-dot"></span>Hoạt động</span>
+                    <span class="category-tag">CÔNG CỤ</span>
+                </div>
+                <h3 class="tool-name">Fix Panel (Bắt buộc)</h3>
+                <p class="tool-desc">Gói thư viện C++ Runtime redistributable bắt buộc cần cài đặt để fix triệt để mọi lỗi văng panel.</p>
+                <div class="tool-meta">
+                    <span><i class="fa-solid fa-hard-drive"></i> 176 MB</span>
+                    <span><i class="fa-solid fa-clock"></i> 25/05/2026</span>
+                </div>
+                <a href="https://github.com/dhieucrypto/DhieuCshell/releases/download/DhieuCshell/FIX_PANELl.rar" class="btn-download-tool" target="_blank"><i class="fa-solid fa-download"></i> TẢI XUỐNG</a>
+            </div>
+
+            <!-- 8. Tắt diệt virus Defender Control -->
+            <div class="download-card" data-category="tool" data-name="tắt diệt virus defender control active window">
+                <div class="card-header-info">
+                    <span class="status-badge status-active"><span class="pulse-dot"></span>Hoạt động</span>
+                    <span class="category-tag">CÔNG CỤ</span>
+                </div>
+                <h3 class="tool-name">Defender Control (Tắt Virus)</h3>
+                <p class="tool-desc">Công cụ tắt nhanh Windows Defender chỉ với 1 click, tránh việc hệ điều hành hiểu lầm và xóa nhầm panel.</p>
+                <div class="tool-meta">
+                    <span><i class="fa-solid fa-hard-drive"></i> 1.3 MB</span>
+                    <span><i class="fa-solid fa-clock"></i> 25/05/2026</span>
+                </div>
+                <a href="https://www.mediafire.com/file/tkkekstze5cpagg/Defend3r_C0ntrol.rar/file" class="btn-download-tool" target="_blank"><i class="fa-solid fa-download"></i> TẢI XUỐNG</a>
+            </div>
+
+            <!-- 9. Mua key panel pc -->
+            
+        </div>
+
+        <!-- Video Guide Section -->
+        <div class="guide-section">
+            <div class="guide-title">
+                <i class="fa-solid fa-video"></i> Hướng Dẫn Cài Đặt Không Lỗi
+            </div>
+            <div class="guide-grid">
+                <div class="video-wrapper">
+                    <!-- Standard YouTube Video Embedded beautifully -->
+                    <iframe class="video-iframe" src="https://www.youtube.com/embed/IgFZUok3ZCU" title="Hướng dẫn cách cài và sử dụng panel không lỗi" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                </div>
+                <div class="guide-info">
+                    <h3 class="guide-h">Cài đặt & Sử dụng Panel không lỗi</h3>
+                    <p class="guide-desc">Quý khách vui lòng làm theo đúng các bước trong video hướng dẫn chi tiết bên cạnh để cài đặt môi trường giả lập và panel chuẩn xác nhất.</p>
+                    <ul class="guide-steps">
+                        <li><i class="fa-solid fa-circle-check"></i> Bước 1: Tải và cài đặt thư viện [Fix Panel] bắt buộc.</li>
+                        <li><i class="fa-solid fa-circle-check"></i> Bước 2: Tắt Windows Defender bằng [Defender Control] trước khi giải nén Panel.</li>
+                        <li><i class="fa-solid fa-circle-check"></i> Bước 3: Cài đặt và sử dụng Free Fire V7A trên BlueStacks.</li>
+                        <li><i class="fa-solid fa-circle-check"></i> Bước 4: Khởi động game, kích hoạt panel và tận hưởng.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+        </div>
+    </div>
+
+    <!-- Modal Đăng Ký / Đăng Nhập Khách Hàng -->
+    <div id="auth-modal" class="auth-modal-overlay" onclick="closeAuthModalViaBackdrop(event)">
+        <div class="auth-modal-card">
+            <button onclick="closeAuthModal()" style="position: absolute; top: 15px; right: 15px; background: transparent; border: none; color: var(--text-dim); font-size: 16px; cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='var(--text-dim)'">✕</button>
+            
+            <div class="auth-tabs">
+                <div id="tab-login" class="auth-tab active" onclick="switchAuthTab('login')">Đăng Nhập</div>
+                <div id="tab-register" class="auth-tab" onclick="switchAuthTab('register')">Đăng Ký</div>
+            </div>
+
+            <div id="auth-error" class="auth-error"></div>
+
+            <!-- Form Đăng Nhập -->
+            <div id="form-login" class="auth-form active">
+                <form onsubmit="handleCustomerLogin(event)">
+                    <div class="form-group">
+                        <label>Tên đăng nhập</label>
+                        <input type="text" id="login-username" class="input-dark" placeholder="Tên đăng nhập của bạn..." required>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 24px;">
+                        <label>Mật khẩu</label>
+                        <input type="password" id="login-password" class="input-dark" placeholder="••••••••" required>
+                    </div>
+                    <button type="submit" class="btn-buy" id="btn-submit-login">ĐĂNG NHẬP KHÁCH HÀNG</button>
+                </form>
+            </div>
+
+            <!-- Form Đăng Ký -->
+            <div id="form-register" class="auth-form">
+                <form onsubmit="handleCustomerRegister(event)">
+                    <div class="form-group">
+                        <label>Tên đăng nhập mới</label>
+                        <input type="text" id="register-username" class="input-dark" placeholder="Tên đăng nhập ít nhất 4 ký tự..." required>
+                    </div>
+                    <div class="form-group">
+                        <label>Địa chỉ Email (@gmail.com)</label>
+                        <input type="email" id="register-email" class="input-dark" placeholder="Viết địa chỉ gmail của bạn..." required>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 24px;">
+                        <label>Mật khẩu mới</label>
+                        <input type="password" id="register-password" class="input-dark" placeholder="Mật khẩu ít nhất 6 ký tự..." required>
+                    </div>
+                    <button type="submit" class="btn-buy btn-nav-primary" id="btn-submit-register">TẠO TÀI KHOẢN MỚI</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Drawer Lịch Sử Mua Hàng -->
+    <div id="history-overlay" class="drawer-overlay" onclick="closeHistoryDrawer()"></div>
+    <div id="history-drawer" class="history-drawer">
+        <div class="history-header">
+            <div class="history-title">
+                <i class="fa-solid fa-clock-rotate-left"></i> Lịch Sử Đơn Hàng Của Bạn
+            </div>
+            <button onclick="closeHistoryDrawer()" style="background: transparent; border: none; color: var(--text-dim); font-size: 18px; cursor: pointer;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='var(--text-dim)'">✕</button>
+        </div>
+        <div class="history-body">
+            <div id="history-empty" style="text-align: center; padding: 40px 10px; color: var(--text-dim);">
+                <i class="fa-solid fa-folder-open" style="font-size: 40px; margin-bottom: 16px; opacity: 0.5;"></i>
+                <p style="font-size: 13px;">Bạn chưa thực hiện bất kỳ giao dịch mua key nào!</p>
+            </div>
+            <div id="history-list-container" class="history-list" style="display: none;"></div>
+        </div>
+    </div>
+
+    <!-- Floating Live Chat Support Widget -->
+    <div class="chat-widget" id="chat-support-widget">
+        <!-- Chat Panel -->
+        <div class="chat-panel" id="chat-support-panel">
+            <div class="chat-header">
+                <div class="chat-header-title">
+                    <div class="chat-header-status"></div>
+                    <div class="chat-header-text">
+                        <h4>Hỗ Trợ Trực Tuyến</h4>
+                        <p>Giải đáp thắc mắc tải file & mua hàng 24/7</p>
+                    </div>
+                </div>
+                <button onclick="toggleChatPanel(event)" style="background: transparent; border: none; color: var(--text-dim); font-size: 16px; cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='var(--text-dim)'">✕</button>
+            </div>
+            
+            <!-- Chat panel states -->
+            <div id="chat-content-authorized" style="display: none; flex: 1; flex-direction: column; overflow: hidden;">
+                <div class="chat-body" id="chat-message-body">
+                    <!-- Messages dynamically rendered here -->
+                </div>
+                <div class="chat-input-area">
+                    <input type="text" id="chat-message-input" class="chat-input" placeholder="Nhập tin nhắn hỗ trợ..." onkeydown="handleChatInputKey(event)">
+                    <button onclick="sendChatMessage()" class="chat-send-btn">
+                        <i class="fa-solid fa-paper-plane" style="font-size: 12px;"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div id="chat-content-unauthorized" class="chat-auth-prompt" style="display: flex;">
+                <i class="fa-solid fa-lock" style="font-size: 32px; color: var(--text-dim); opacity: 0.5;"></i>
+                <p>Bạn cần phải <strong>đăng nhập</strong> tài khoản khách hàng để có thể chat trực tiếp với đội ngũ hỗ trợ.</p>
+                <button class="btn-nav btn-nav-primary" onclick="closeChatPanel(); openAuthModal('login');" style="padding: 10px 20px; font-size: 12px;">ĐĂNG NHẬP NGAY</button>
+            </div>
+        </div>
+        
+        <!-- Trigger Bubble -->
+        <div class="chat-bubble" onclick="toggleChatPanel(event)">
+            <i class="fa-solid fa-comment-dots"></i>
+            <div class="unread-badge" id="chat-unread-badge">0</div>
+        </div>
+    </div>
+
+    <!-- Client-side script -->
+    <script>
+        let currentFilter = 'all';
+
+        // --- MOBILE SIDEBAR TOGGLE ---
+        function toggleMobileSidebar() {
+            const menu = document.getElementById('sidebar-menu');
+            if (menu) menu.classList.toggle('active');
+        }
+
+        // --- CUSTOMER SESSIONS & AUTH ---
+        function checkCustomerSession() {
+            const token = localStorage.getItem('customerToken');
+            const username = localStorage.getItem('customerUsername');
+
+            const guestMenu = document.getElementById('guest-menu');
+            const userMenu = document.getElementById('user-menu');
+            const usernameDisplay = document.getElementById('username-display');
+
+            if (token && username) {
+                guestMenu.style.display = 'none';
+                userMenu.style.display = 'flex';
+                usernameDisplay.innerText = username;
+            } else {
+                guestMenu.style.display = 'flex';
+                userMenu.style.display = 'none';
+            }
+        }
+
+        function openAuthModal(tab = 'login') {
+            document.getElementById('auth-modal').style.display = 'flex';
+            switchAuthTab(tab);
+        }
+
+        function closeAuthModal() {
+            document.getElementById('auth-modal').style.display = 'none';
+            document.getElementById('auth-error').style.display = 'none';
+        }
+
+        function closeAuthModalViaBackdrop(event) {
+            if (event.target.id === 'auth-modal') {
+                closeAuthModal();
+            }
+        }
+
+        function switchAuthTab(tab) {
+            document.getElementById('tab-login').classList.remove('active');
+            document.getElementById('tab-register').classList.remove('active');
+            document.getElementById('form-login').classList.remove('active');
+            document.getElementById('form-register').classList.remove('active');
+
+            if (tab === 'login') {
+                document.getElementById('tab-login').classList.add('active');
+                document.getElementById('form-login').classList.add('active');
+            } else {
+                document.getElementById('tab-register').classList.add('active');
+                document.getElementById('form-register').classList.add('active');
+            }
+        }
+
+        async function handleCustomerRegister(e) {
+            e.preventDefault();
+            const user = document.getElementById('register-username').value;
+            const email = document.getElementById('register-email').value;
+            const pass = document.getElementById('register-password').value;
+            const btn = document.getElementById('btn-submit-register');
+            const errorEl = document.getElementById('auth-error');
+
+            btn.disabled = true;
+            btn.innerText = 'ĐANG TẠO TÀI KHOẢN...';
+            errorEl.style.display = 'none';
+
+            try {
+                const response = await fetch('/api/client/customer/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: user, email: email, password: pass })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    alert(data.message);
+                    switchAuthTab('login');
+                    document.getElementById('login-username').value = user;
+                    document.getElementById('login-password').value = pass;
+                } else {
+                    errorEl.innerText = data.message || 'Đăng ký thất bại!';
+                    errorEl.style.display = 'block';
+                }
+            } catch (err) {
+                errorEl.innerText = 'Không thể kết nối máy chủ!';
+                errorEl.style.display = 'block';
+            } finally {
+                btn.disabled = false;
+                btn.innerText = 'TẠO TÀI KHOẢN MỚI';
+            }
+        }
+
+        async function handleCustomerLogin(e) {
+            e.preventDefault();
+            const user = document.getElementById('login-username').value;
+            const pass = document.getElementById('login-password').value;
+            const btn = document.getElementById('btn-submit-login');
+            const errorEl = document.getElementById('auth-error');
+
+            btn.disabled = true;
+            btn.innerText = 'ĐANG ĐĂNG NHẬP...';
+            errorEl.style.display = 'none';
+
+            try {
+                const response = await fetch('/api/client/customer/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: user, password: pass })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    localStorage.setItem('customerToken', data.token);
+                    localStorage.setItem('customerUsername', data.username);
+                    closeAuthModal();
+                    checkCustomerSession();
+                    loadOrderHistory();
+                } else {
+                    errorEl.innerText = data.message || 'Đăng nhập thất bại!';
+                    errorEl.style.display = 'block';
+                }
+            } catch (err) {
+                errorEl.innerText = 'Không thể kết nối máy chủ!';
+                errorEl.style.display = 'block';
+            } finally {
+                btn.disabled = false;
+                btn.innerText = 'ĐĂNG NHẬP KHÁCH HÀNG';
+            }
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('customerToken');
+            localStorage.removeItem('customerUsername');
+            checkCustomerSession();
+            closeHistoryDrawer();
+        }
+
+        // --- ORDER HISTORY ---
+        async function loadOrderHistory() {
+            const token = localStorage.getItem('customerToken');
+            if (!token) return;
+
+            const emptyEl = document.getElementById('history-empty');
+            const listContainer = document.getElementById('history-list-container');
+
+            try {
+                const response = await fetch('/api/client/customer/orders', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await response.json();
+
+                if (data.success && data.orders && data.orders.length > 0) {
+                    emptyEl.style.display = 'none';
+                    listContainer.style.display = 'flex';
+
+                    const formatDate = (isoString) => {
+                        const date = new Date(isoString);
+                        return `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+                    };
+
+                    listContainer.innerHTML = data.orders.map(order => {
+                        const isPaid = order.status === 'completed';
+                        const statusBadge = isPaid 
+                            ? `<span class="item-status status-completed">Thành công</span>` 
+                            : `<span class="item-status status-pending">Chờ CK</span>`;
+                        
+                        return `
+                            <div class="history-item">
+                                <div class="item-top">
+                                    <div class="item-id">Đơn: ${order.orderId}</div>
+                                    ${statusBadge}
+                                </div>
+                                <div class="item-details">
+                                    <div>Gói: <strong>${order.packageName}</strong></div>
+                                    <div>Số tiền: <strong>${String(order.price).replace(/\B(?=(\d{3})+(?!\d))/g, ".")}đ</strong></div>
+                                </div>
+                                <div class="item-details">
+                                    <div>Ngày: ${formatDate(order.createdAt)}</div>
+                                </div>
+                                ${isPaid && order.generatedKey ? `
+                                    <div class="item-key-container">
+                                        <span class="item-key" id="key-${order.orderId}">${order.generatedKey}</span>
+                                        <button class="btn-nav" style="padding: 4px 8px; font-size: 10px;" onclick="copyHistoryKey('${order.orderId}', this)">COPY</button>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        `;
+                    }).join('');
+                } else {
+                    emptyEl.style.display = 'block';
+                    listContainer.style.display = 'none';
+                }
+            } catch (err) {
+                console.error('Không thể tải lịch sử mua hàng:', err);
+            }
+        }
+
+        function copyHistoryKey(orderId, btnElement) {
+            const keyText = document.getElementById(`key-${orderId}`).innerText;
+            navigator.clipboard.writeText(keyText).then(() => {
+                const originalText = btnElement.innerText;
+                btnElement.innerText = 'COPIED!';
+                btnElement.style.background = 'var(--success)';
+                btnElement.style.color = '#ffffff';
+                setTimeout(() => {
+                    btnElement.innerText = originalText;
+                    btnElement.style.background = 'rgba(255, 255, 255, 0.03)';
+                    btnElement.style.color = '#ffffff';
+                }, 1500);
+            });
+        }
+
+        function openHistoryDrawer() {
+            loadOrderHistory();
+            document.getElementById('history-drawer').classList.add('active');
+            document.getElementById('history-overlay').classList.add('active');
+        }
+
+        function closeHistoryDrawer() {
+            document.getElementById('history-drawer').classList.remove('active');
+            document.getElementById('history-overlay').classList.remove('active');
+        }
+
+        // --- FILTERING & SEARCH LOGIC ---
+        function filterCategory(category, buttonEl) {
+            currentFilter = category;
+            
+            // Toggle active class on tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            buttonEl.classList.add('active');
+            
+            applyFilterAndSearch();
+        }
+
+        function handleSearch() {
+            applyFilterAndSearch();
+        }
+
+        function applyFilterAndSearch() {
+            const searchQuery = document.getElementById('searchInput').value.toLowerCase().trim();
+            const cards = document.querySelectorAll('.download-card');
+            
+            cards.forEach(card => {
+                const cardCategory = card.getAttribute('data-category');
+                const cardName = card.getAttribute('data-name');
+                
+                const matchesCategory = (currentFilter === 'all' || cardCategory === currentFilter);
+                const matchesSearch = (searchQuery === '' || cardName.includes(searchQuery));
+                
+                if (matchesCategory && matchesSearch) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // --- CLIENT SUPPORT LIVE CHAT ---
+        let chatPollingInterval = null;
+        let chatPanelOpen = false;
+
+        function toggleChatPanel(event) {
+            event.stopPropagation();
+            const panel = document.getElementById('chat-support-panel');
+            if (panel.classList.contains('active')) {
+                closeChatPanel();
+            } else {
+                openChatPanel();
+            }
+        }
+
+        function openChatPanel() {
+            const panel = document.getElementById('chat-support-panel');
+            panel.classList.add('active');
+            chatPanelOpen = true;
+            
+            const token = localStorage.getItem('customerToken');
+            const authContent = document.getElementById('chat-content-authorized');
+            const unauthContent = document.getElementById('chat-content-unauthorized');
+            
+            if (token) {
+                authContent.style.display = 'flex';
+                unauthContent.style.display = 'none';
+                
+                syncChatMessages();
+                if (chatPollingInterval) clearInterval(chatPollingInterval);
+                chatPollingInterval = setInterval(syncChatMessages, 3000);
+            } else {
+                authContent.style.display = 'none';
+                unauthContent.style.display = 'flex';
+            }
+        }
+
+        function closeChatPanel() {
+            const panel = document.getElementById('chat-support-panel');
+            panel.classList.remove('active');
+            chatPanelOpen = false;
+            if (chatPollingInterval) {
+                clearInterval(chatPollingInterval);
+                chatPollingInterval = null;
+            }
+        }
+
+        async function syncChatMessages() {
+            const token = localStorage.getItem('customerToken');
+            if (!token) return;
+            
+            try {
+                const response = await fetch('/api/chat/messages', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ customerToken: token })
+                });
+                const data = await response.json();
+                
+                if (data.success && data.messages) {
+                    renderChatMessages(data.messages);
+                }
+            } catch (err) {
+                console.error('Không thể đồng bộ tin nhắn:', err);
+            }
+        }
+
+        function renderChatMessages(messages) {
+            const body = document.getElementById('chat-message-body');
+            if (!body) return;
+            
+            const atBottom = body.scrollHeight - body.scrollTop <= body.clientHeight + 50;
+            
+            const formatTime = (isoString) => {
+                const date = new Date(isoString);
+                return `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+            };
+            
+            const newHtml = messages.map(msg => {
+                const isCustomer = msg.sender === 'customer';
+                const senderClass = isCustomer ? 'customer' : 'admin';
+                return `
+                    <div class="chat-msg ${senderClass}">
+                        <div>${msg.text}</div>
+                        <span class="chat-msg-time">${formatTime(msg.timestamp)}</span>
+                    </div>
+                `;
+            }).join('');
+            
+            if (body.innerHTML !== newHtml) {
+                body.innerHTML = newHtml;
+                if (atBottom || body.innerHTML === '') {
+                    body.scrollTop = body.scrollHeight;
+                }
+            }
+        }
+
+        async function sendChatMessage() {
+            const input = document.getElementById('chat-message-input');
+            const text = input.value.trim();
+            const token = localStorage.getItem('customerToken');
+            
+            if (!text || !token) return;
+            
+            input.value = '';
+            input.focus();
+            
+            try {
+                const response = await fetch('/api/chat/send', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text, customerToken: token })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    syncChatMessages();
+                } else {
+                    alert(data.message || 'Lỗi gửi tin nhắn!');
+                }
+            } catch (err) {
+                console.error('Không thể gửi tin nhắn hỗ trợ:', err);
+            }
+        }
+
+        function handleChatInputKey(event) {
+            if (event.key === 'Enter') {
+                sendChatMessage();
+            }
+        }
+
+        async function loadDynamicDownloads() {
+            try {
+                const response = await fetch('/api/client/downloads');
+                const data = await response.json();
+                if (data.success) {
+                    // Render download items
+                    const grid = document.getElementById('downloadGrid');
+                    if (data.downloads && data.downloads.length > 0) {
+                        grid.innerHTML = data.downloads.map(item => {
+                            const sizeVal = item.size || 'unknown';
+                            const dateVal = new Date(item.createdAt).toLocaleDateString('vi-VN');
+                            
+                            // Check link target
+                            let isExternal = item.link.startsWith('http');
+                            let linkHref = item.link;
+                            let btnIcon = 'fa-download';
+                            let btnText = 'TẢI XUỐNG';
+                            if (item.name.toLowerCase().includes('mua key') || item.name.toLowerCase().includes('mua')) {
+                                btnIcon = 'fa-cart-shopping';
+                                btnText = 'MUA KEY NGAY';
+                            }
+                            
+                            return `
+                                <div class="download-card" data-category="${item.category}" data-name="${item.name.toLowerCase()}">
+                                    <div class="card-header-info">
+                                        <span class="status-badge status-${item.status === 'active' ? 'active' : 'maintaining'}">
+                                            <span class="pulse-dot"></span>${item.status === 'active' ? 'Hoạt động' : 'Bảo trì'}
+                                        </span>
+                                        <span class="category-tag">${item.category.toUpperCase() === 'PANEL' ? 'PANEL PC' : (item.category.toUpperCase() === 'EMULATOR' ? 'GAME/GIẢ LẬP' : 'CÔNG CỤ')}</span>
+                                    </div>
+                                    <h3 class="tool-name">${item.name}</h3>
+                                    <p class="tool-desc">${item.description || ''}</p>
+                                    <div class="tool-meta">
+                                        <span><i class="fa-solid fa-hard-drive"></i> ${sizeVal}</span>
+                                        <span><i class="fa-solid fa-clock"></i> ${dateVal}</span>
+                                    </div>
+                                    <a href="${linkHref}" class="btn-download-tool" ${isExternal ? 'target="_blank"' : ''}>
+                                        <i class="fa-solid ${btnIcon}"></i> ${btnText}
+                                    </a>
+                                </div>
+                            `;
+                        }).join('');
+                    }
+
+                    // Render guides
+                    const guideContainer = document.querySelector('.guide-section');
+                    if (data.guides && data.guides.length > 0 && guideContainer) {
+                        const firstGuide = data.guides[0];
+                        // If it is a youtube link, get embed url
+                        let embedUrl = firstGuide.link;
+                        if (firstGuide.link.includes('youtu.be/')) {
+                            const ytId = firstGuide.link.split('youtu.be/')[1].split('?')[0];
+                            embedUrl = `https://www.youtube.com/embed/${ytId}`;
+                        } else if (firstGuide.link.includes('watch?v=')) {
+                            const ytId = firstGuide.link.split('watch?v=')[1].split('&')[0];
+                            embedUrl = `https://www.youtube.com/embed/${ytId}`;
+                        }
+                        
+                        guideContainer.innerHTML = `
+                            <div class="guide-title">
+                                <i class="${firstGuide.icon || 'fa-solid fa-video'}"></i> ${firstGuide.title}
+                            </div>
+                            <div class="guide-grid">
+                                <div class="video-wrapper">
+                                    <iframe class="video-iframe" src="${embedUrl}" title="${firstGuide.title}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                                </div>
+                                <div class="guide-info">
+                                    <h3 class="guide-h">${firstGuide.title}</h3>
+                                    <p class="guide-desc">Quý khách vui lòng làm theo đúng các bước trong video hướng dẫn chi tiết bên cạnh để cài đặt môi trường giả lập và panel chuẩn xác nhất.</p>
+                                    <ul class="guide-steps">
+                                        <li><i class="fa-solid fa-circle-check"></i> Bước 1: Tải và cài đặt thư viện [Fix Panel] bắt buộc.</li>
+                                        <li><i class="fa-solid fa-circle-check"></i> Bước 2: Tắt Windows Defender bằng [Defender Control] trước khi giải nén Panel.</li>
+                                        <li><i class="fa-solid fa-circle-check"></i> Bước 3: Cài đặt và sử dụng Free Fire V7A trên BlueStacks.</li>
+                                        <li><i class="fa-solid fa-circle-check"></i> Bước 4: Khởi động game, kích hoạt panel và tận hưởng.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        `;
+                    }
+                }
+            } catch (err) {
+                console.error('Không thể tải tệp tải xuống:', err);
+            }
+        }
+
+        // --- DOM INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', async () => {
+            checkCustomerSession();
+            loadDynamicDownloads();
+            
+            // Sync dynamic site details if any
+            try {
+                const response = await fetch('/api/client/payment-settings');
+                const data = await response.json();
+                if (data.success && data.settings) {
+                    if (data.settings.brandName) {
+                        document.getElementById('brand-name-logo').innerText = data.settings.brandName;
+                    }
+                    if (data.settings.brandLogo) {
+                        document.getElementById('logo-char').innerText = data.settings.brandLogo.toUpperCase();
+                    }
+                }
+            } catch (err) {
+                console.warn('Không thể tải cấu hình thương hiệu:', err);
+            }
+        });
+    </script>
+</body>
+</html>
