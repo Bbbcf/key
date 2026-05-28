@@ -1,5 +1,4 @@
-let users = global.users || [];
-global.users = users;
+import users from './store';
 
 export default function handler(req, res) {
   if (req.method !== 'POST') {
@@ -26,6 +25,9 @@ export default function handler(req, res) {
   return res.status(200).json({
     success: true,
     message: 'Đăng nhập thành công',
-    user
+    user: {
+      username: user.username,
+      email: user.email
+    }
   });
 }
