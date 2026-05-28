@@ -1,5 +1,4 @@
-let users = global.users || [];
-global.users = users;
+import users from './store';
 
 export default function handler(req, res) {
   if (req.method !== 'POST') {
@@ -35,8 +34,6 @@ export default function handler(req, res) {
     email,
     password
   });
-
-  global.users = users;
 
   return res.status(200).json({
     success: true,
