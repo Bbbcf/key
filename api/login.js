@@ -1,33 +1,42 @@
-import users from './store';
+import clientPromise from '../lib/mongodb';
 
-export default function handler(req, res) {
+export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({
       success: false
     });
   }
 
-  const { username, password } = req.body;
+  try {
+    const { username, password } = req.body;
 
-  const user = users.find(
-    u =>
-      u.username === username &&
-      u.password === password
-  );
+    const client = await clientPromise;
+    const db = client.db('app');
 
-  if (!user) {
-    return res.status(401).json({
+    const user = await db.collection('users').findOne({
+      username,
+      password
+    });
+
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: 'Sai tên đăng nhập hoặc mật khẩu'
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      username: user.username,
+      token: `token_${user.username}`
+    });
+
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
       success: false,
-      message: 'Sai tên đăng nhập hoặc mật khẩu'
+      message: 'Lỗi server'
     });
   }
-
-  return res.status(200).json({
-    success: true,
-    message: 'Đăng nhập thành công',
-    user: {
-      username: user.username,
-      email: user.email
-    }
-  });
 }
