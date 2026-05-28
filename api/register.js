@@ -2,45 +2,37 @@ import clientPromise from '../lib/mongodb';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
-    return res.status(405).json({
-      success: false,
-      message: 'Method not allowed'
-    });
+    return res.status(405).json({ success: false });
   }
 
   try {
-    const { username, email, password } = req.body;
-
-    if (!username || !email || !password) {
-      return res.status(400).json({
-        success: false,
-        message: 'Thiếu dữ liệu'
-      });
-    }
+    const { username, password } = req.body;
 
     const client = await clientPromise;
     const db = client.db('app');
 
-    const existingUser = await db.collection('users').findOne({
-      username
+    const user = await db.collection('users').findOne({
+      username: username.trim()
     });
 
-    if (existingUser) {
-      return res.status(400).json({
+    if (!user) {
+      return res.status(401).json({
         success: false,
-        message: 'Tài khoản đã tồn tại'
+        message: 'Không tìm thấy tài khoản'
       });
     }
 
-    await db.collection('users').insertOne({
-      username,
-      email,
-      password
-    });
+    if (user.password !== password.trim()) {
+      return res.status(401).json({
+        success: false,
+        message: 'Sai mật khẩu'
+      });
+    }
 
     return res.status(200).json({
       success: true,
-      message: 'Đăng ký thành công'
+      username: user.username,
+      token: `token_${user.username}`
     });
 
   } catch (error) {
