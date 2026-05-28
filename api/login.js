@@ -2,9 +2,7 @@ import clientPromise from '../lib/mongodb';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
-    return res.status(405).json({
-      success: false
-    });
+    return res.status(405).json({ success: false });
   }
 
   try {
@@ -14,14 +12,20 @@ export default async function handler(req, res) {
     const db = client.db('app');
 
     const user = await db.collection('users').findOne({
-      username,
-      password
+      username: username.trim()
     });
 
     if (!user) {
       return res.status(401).json({
         success: false,
-        message: 'Sai tên đăng nhập hoặc mật khẩu'
+        message: 'Không tìm thấy tài khoản'
+      });
+    }
+
+    if (user.password !== password.trim()) {
+      return res.status(401).json({
+        success: false,
+        message: 'Sai mật khẩu'
       });
     }
 
